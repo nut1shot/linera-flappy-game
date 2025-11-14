@@ -8,6 +8,16 @@ import { TimeUtils } from "./utils/TimeUtils.js";
 import { TOURNAMENT_CONFIG } from "./constants/GameConstants.js";
 import { Loading } from "./utils/LoadingManager.js";
 
+// Import UI Components
+import { AuthModal } from "./components/AuthModal/AuthModal.js";
+import { ModeSelection } from "./components/ModeSelection/ModeSelection.js";
+import { TournamentCreation } from "./components/TournamentCreation/TournamentCreation.js";
+import { TournamentList } from "./components/TournamentList/TournamentList.js";
+import { PlayerInfo } from "./components/PlayerInfo/PlayerInfo.js";
+import { LeaderboardPanel } from "./components/LeaderboardPanel/LeaderboardPanel.js";
+import { TournamentInfo } from "./components/TournamentInfo/TournamentInfo.js";
+import { TournamentLeaderboardModal } from "./components/TournamentLeaderboardModal/TournamentLeaderboardModal.js";
+
 class FlappyGame {
   constructor() {
     // Initialize modules
@@ -17,6 +27,16 @@ class FlappyGame {
     this.gameState = new GameState();
     this.gameState.setBlockchainClient(this.lineraClient); // Set blockchain client
     this.gameUI = new GameUI();
+
+    // Initialize UI Components
+    this.authModal = new AuthModal();
+    this.modeSelection = new ModeSelection();
+    this.tournamentCreation = new TournamentCreation();
+    this.tournamentList = new TournamentList();
+    this.playerInfo = new PlayerInfo();
+    this.leaderboardPanel = new LeaderboardPanel();
+    this.tournamentInfo = new TournamentInfo();
+    this.tournamentLeaderboardModal = new TournamentLeaderboardModal();
 
     // Canvas setup
     this.canvas = document.getElementById("gameCanvas");
@@ -28,8 +48,26 @@ class FlappyGame {
   }
 
   initialize() {
+    // Mount components to DOM
+    this.mountComponents();
+
     // Initialize UI
     this.gameUI.initialize();
+
+    // Pass component references to GameUI
+    this.gameUI.setComponents({
+      authModal: this.authModal,
+      modeSelection: this.modeSelection,
+      tournamentList: this.tournamentList,
+      tournamentCreation: this.tournamentCreation,
+      playerInfo: this.playerInfo,
+      leaderboardPanel: this.leaderboardPanel,
+      tournamentInfo: this.tournamentInfo,
+      tournamentLeaderboardModal: this.tournamentLeaderboardModal
+    });
+
+    // Set up component callbacks
+    this.setupComponentCallbacks();
 
     // Set up callbacks
     this.setupCallbacks();
@@ -42,6 +80,59 @@ class FlappyGame {
 
     // Start loading process
     this.startLoadingProcess();
+  }
+
+  mountComponents() {
+    // Mount modal components to body
+    document.body.appendChild(this.authModal.create());
+    document.body.appendChild(this.modeSelection.create());
+    document.body.appendChild(this.tournamentCreation.create());
+    document.body.appendChild(this.tournamentList.create());
+    document.body.appendChild(this.tournamentLeaderboardModal.create());
+
+    // Mount game screen components to their containers
+    const playerInfoContainer = document.getElementById('player-info-container');
+    if (playerInfoContainer) {
+      playerInfoContainer.appendChild(this.playerInfo.create());
+    }
+
+    const tournamentInfoContainer = document.getElementById('tournament-info-container');
+    if (tournamentInfoContainer) {
+      tournamentInfoContainer.appendChild(this.tournamentInfo.create());
+    }
+
+    const leaderboardContainer = document.getElementById('leaderboard-container');
+    if (leaderboardContainer) {
+      leaderboardContainer.appendChild(this.leaderboardPanel.create());
+    }
+  }
+
+  setupComponentCallbacks() {
+    // Auth Modal - will be set up when showing the modal
+
+    // Mode Selection
+    this.modeSelection.onPracticeModeCallback = () => this.selectPracticeMode();
+    this.modeSelection.onTournamentModeCallback = () => this.selectTournamentMode();
+
+    // Tournament Creation
+    this.tournamentCreation.onCreateCallback = (data) => this.handleTournamentCreation(data);
+    this.tournamentCreation.onCancelCallback = () => this.backToTournamentList();
+
+    // Tournament List
+    this.tournamentList.onCreateCallback = () => this.createTournament();
+    this.tournamentList.onBackCallback = () => this.backToModeSelection();
+    this.tournamentList.onJoinCallback = (id) => this.joinTournament(id);
+    this.tournamentList.onViewCallback = (id) => this.viewTournamentLeaderboard(id);
+
+    // Player Info
+    this.playerInfo.onLogoutCallback = () => this.logout();
+
+    // Leaderboard Panel
+    this.leaderboardPanel.onRefreshCallback = () => this.refreshLeaderboard();
+
+    // Tournament Leaderboard Modal
+    this.tournamentLeaderboardModal.onJoinCallback = (id) => this.joinTournamentFromModal(id);
+    this.tournamentLeaderboardModal.onRefreshCallback = (id) => this.refreshTournamentLeaderboard(id);
   }
 
   setupCallbacks() {
@@ -1206,6 +1297,10 @@ Please check:
     this.gameState.setCurrentScreen("mode-selection-screen");
   }
 
+  backToTournamentList() {
+    this.gameState.setCurrentScreen("tournament-screen");
+  }
+
   // Tournament management
   async refreshTournaments() {
     const spinner = Loading.tournament();
@@ -1519,9 +1614,90 @@ Please check:
     const tournament = this.gameState
       .getTournaments()
       .find((t) => t.id === tournamentId);
-    if (tournament) {
-      // Use the tournament modal to show leaderboard
-      await this.tournamentModal.showTournamentLeaderboardModal(tournament);
+    if (!tournament) {
+      console.error('Tournament not found:', tournamentId);
+      return;
+    }
+
+    // Calculate time left
+    const timeLeft = TimeUtils.calculateTimeLeft(new Date(tournament.endTime));
+
+    // Show the tournament leaderboard modal component
+    this.tournamentLeaderboardModal.show({
+      tournamentId: tournament.id,
+      tournamentName: tournament.name,
+      status: tournament.status,
+      playerCount: tournament.playerCount || 0,
+      timeLeft: timeLeft,
+      onJoin: (id) => this.joinTournamentFromModal(id),
+      onRefresh: (id) => this.refreshTournamentLeaderboard(id)
+    });
+
+    // Load leaderboard entries
+    this.tournamentLeaderboardModal.showLoading();
+    try {
+      const leaderboard = await this.lineraClient.getTournamentLeaderboard(tournamentId);
+      const currentUser = this.gameState.getPlayerName();
+
+      // Transform leaderboard data to match component's expected format
+      const transformedLeaderboard = leaderboard.map(entry => ({
+        playerName: entry.username,
+        score: entry.score,
+        rank: entry.rank,
+        badge: entry.rank === 1 ? '🥇' : entry.rank === 2 ? '🥈' : entry.rank === 3 ? '🥉' : null
+      }));
+
+      this.tournamentLeaderboardModal.setLeaderboardEntries(transformedLeaderboard, currentUser);
+    } catch (error) {
+      console.error('Failed to load tournament leaderboard:', error);
+      this.tournamentLeaderboardModal.setLeaderboardEntries([]);
+    }
+  }
+
+  async joinTournamentFromModal(tournamentId) {
+    console.log('joinTournamentFromModal called with ID:', tournamentId);
+    // Join the tournament that's currently displayed in the modal
+    if (!tournamentId) {
+      console.error('No tournament ID provided');
+      return;
+    }
+
+    try {
+      await this.joinTournament(tournamentId);
+      // Hide the modal after successfully joining
+      this.tournamentLeaderboardModal.hide();
+    } catch (error) {
+      console.error('Failed to join tournament from modal:', error);
+    }
+  }
+
+  async refreshTournamentLeaderboard(tournamentId) {
+    console.log('refreshTournamentLeaderboard called with ID:', tournamentId);
+    // Refresh the currently displayed tournament leaderboard
+    const targetTournamentId = tournamentId || this.tournamentLeaderboardModal.currentTournamentId;
+    console.log('Target tournament ID:', targetTournamentId);
+    if (!targetTournamentId) {
+      console.error('No tournament ID provided or currently displayed in modal');
+      return;
+    }
+
+    this.tournamentLeaderboardModal.showLoading();
+    try {
+      const leaderboard = await this.lineraClient.getTournamentLeaderboard(targetTournamentId);
+      const currentUser = this.gameState.getPlayerName();
+
+      // Transform leaderboard data to match component's expected format
+      const transformedLeaderboard = leaderboard.map(entry => ({
+        playerName: entry.username,
+        score: entry.score,
+        rank: entry.rank,
+        badge: entry.rank === 1 ? '🥇' : entry.rank === 2 ? '🥈' : entry.rank === 3 ? '🥉' : null
+      }));
+
+      this.tournamentLeaderboardModal.setLeaderboardEntries(transformedLeaderboard, currentUser);
+    } catch (error) {
+      console.error('Failed to refresh tournament leaderboard:', error);
+      this.tournamentLeaderboardModal.setLeaderboardEntries([]);
     }
   }
 

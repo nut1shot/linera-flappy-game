@@ -6,6 +6,11 @@ export class GameUI {
     this.callbacks = {};
     this.isInitialized = false;
     this.userRole = "player";
+    this.components = {}; // Will hold references to UI components
+  }
+
+  setComponents(components) {
+    this.components = components;
   }
 
   initialize() {
@@ -217,32 +222,48 @@ export class GameUI {
 
   // Screen management
   showScreen(screenName) {
-    // Hide all screens
-    const screens = [
-      "initial-loading-screen",
-      "auth-screen",
-      "mode-selection-screen",
-      "game-screen",
-      "tournament-screen",
-      "tournament-creation",
-    ];
+    // Hide all component-based screens
+    if (this.components.authModal) this.components.authModal.hide();
+    if (this.components.modeSelection) this.components.modeSelection.hide();
+    if (this.components.tournamentList) this.components.tournamentList.hide();
+    if (this.components.tournamentCreation) this.components.tournamentCreation.hide();
 
-    screens.forEach((screen) => {
-      const element = document.getElementById(screen);
-      if (element) {
-        element.style.display = "none";
-      }
-    });
+    // Hide DOM-based screens
+    const gameScreen = document.getElementById("game-screen");
+    if (gameScreen) gameScreen.style.display = "none";
 
     // Show requested screen
-    const targetScreen = document.getElementById(screenName);
-    if (targetScreen) {
-      // Use appropriate display style based on screen type
-      if (screenName === "game-screen") {
-        targetScreen.style.display = "flex";
-      } else {
-        targetScreen.style.display = "flex";
-      }
+    switch (screenName) {
+      case "auth-screen":
+        // Auth modal will be shown by the auth flow
+        break;
+      case "mode-selection-screen":
+        if (this.components.modeSelection) {
+          this.components.modeSelection.show();
+        }
+        break;
+      case "tournament-screen":
+        if (this.components.tournamentList) {
+          this.components.tournamentList.show({
+            isAdmin: this.userRole === "ADMIN"
+          });
+        }
+        break;
+      case "tournament-creation":
+        if (this.components.tournamentCreation) {
+          this.components.tournamentCreation.show();
+        }
+        break;
+      case "game-screen":
+        if (gameScreen) {
+          gameScreen.style.display = "flex";
+        }
+        break;
+      case "initial-loading-screen":
+        // Loading is handled by LoadingSpinner component
+        break;
+      default:
+        console.warn(`Unknown screen: ${screenName}`);
     }
   }
 
@@ -283,18 +304,25 @@ export class GameUI {
 
   // Username modal
   showAuthModal() {
-    if (this.elements.authScreen) {
-      this.elements.authScreen.style.display = "flex";
+    if (this.components.authModal) {
+      this.components.authModal.show();
     }
   }
 
   hideAuthModal() {
-    if (this.elements.authScreen) {
-      this.elements.authScreen.style.display = "none";
+    if (this.components.authModal) {
+      this.components.authModal.hide();
     }
   }
 
   updatePlayerInfo(user) {
+    // Update using component if available
+    if (this.components.playerInfo) {
+      this.components.playerInfo.setPlayerName(user.username);
+      this.components.playerInfo.setPlayerRole(user.role === "ADMIN" ? "Admin" : "Player");
+    }
+
+    // Fallback to direct DOM manipulation
     const playerNameElement = document.getElementById("player-name");
     const playerRoleElement = document.getElementById("player-role");
 

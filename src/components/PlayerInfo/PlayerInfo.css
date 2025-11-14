@@ -1,0 +1,115 @@
+/* Player Info Styles */
+@import '../../styles/variables.css';
+
+.player-info {
+  background: var(--color-bg-dark);
+  border: 3px solid var(--color-bg-darkest);
+  padding: var(--spacing-lg);
+  position: relative;
+}
+
+.player-info::before {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  width: 6px;
+  height: 6px;
+  background: var(--color-text-primary);
+  box-shadow:
+    calc(100% + 0px) 0 0 var(--color-text-primary),
+    0 calc(100% + 0px) 0 var(--color-text-primary),
+    calc(100% + 0px) calc(100% + 0px) 0 var(--color-text-primary);
+}
+
+.player-info h3 {
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-lg);
+  font-size: var(--font-size-base);
+  text-align: center;
+  text-shadow: 2px 2px 0 var(--color-bg-darkest);
+}
+
+.player-info .info-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-md);
+  font-size: var(--font-size-xs);
+}
+
+.player-info .info-item .label {
+  color: var(--color-sky-light);
+  text-shadow: 1px 1px 0 var(--color-bg-darkest);
+}
+
+.player-info .info-item .value {
+  color: var(--color-text-white);
+  font-weight: bold;
+  text-shadow: 1px 1px 0 var(--color-bg-darkest);
+}
+
+#player-name {
+  color: var(--color-text-primary);
+}
+
+#player-role {
+  color: var(--color-sky-light);
+  font-size: 9px;
+}
+
+#player-role.ADMIN {
+  color: #FFD700;
+}
+
+.player-actions {
+  margin-top: var(--spacing-lg);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--color-bg-darker);
+  display: flex;
+  justify-content: center;
+}
+
+.logout-button {
+  background: linear-gradient(135deg, var(--color-error) 0%, #C0392B 100%);
+  color: var(--color-text-primary);
+  border: 2px solid var(--color-error);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  font-size: var(--font-size-xs);
+  font-weight: bold;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-family: inherit;
+}
+
+.logout-button::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  width: 4px;
+  height: 4px;
+  background: var(--color-error);
+  border-radius: 2px;
+}
+
+.logout-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+  background: linear-gradient(135deg, #C0392B 0%, #A93226 100%);
+}
+
+.logout-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(231, 76, 60, 0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .logout-button {
+    padding: var(--spacing-md) var(--spacing-xl);
+    font-size: var(--font-size-sm);
+  }
+}

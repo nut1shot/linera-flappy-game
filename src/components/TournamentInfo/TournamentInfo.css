@@ -1,0 +1,62 @@
+/* Tournament Info Styles */
+@import '../../styles/variables.css';
+
+.tournament-info {
+  background: var(--color-bg-dark);
+  border: 3px solid var(--color-bg-darkest);
+  padding: var(--spacing-lg);
+  position: relative;
+  border-left: 6px solid var(--color-brand-primary);
+}
+
+.tournament-info::before {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  width: 6px;
+  height: 6px;
+  background: var(--color-brand-primary);
+  box-shadow:
+    calc(100% + 0px) 0 0 var(--color-brand-primary),
+    0 calc(100% + 0px) 0 var(--color-brand-primary),
+    calc(100% + 0px) calc(100% + 0px) 0 var(--color-brand-primary);
+}
+
+.tournament-info h3 {
+  color: var(--color-brand-primary);
+  margin-bottom: var(--spacing-lg);
+  font-size: var(--font-size-sm);
+  text-align: center;
+  text-shadow: 2px 2px 0 var(--color-bg-darkest);
+}
+
+.tournament-info .info-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-md);
+  font-size: var(--font-size-xs);
+}
+
+.tournament-info .info-item .label {
+  color: var(--color-sky-light);
+  text-shadow: 1px 1px 0 var(--color-bg-darkest);
+}
+
+.tournament-info .info-item .value {
+  color: var(--color-text-white);
+  font-weight: bold;
+  text-shadow: 1px 1px 0 var(--color-bg-darkest);
+}
+
+#tournament-status {
+  color: var(--color-success);
+}
+
+#tournament-time-left {
+  color: var(--color-warning);
+}
+
+#tournament-players {
+  color: var(--color-info);
+}

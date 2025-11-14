@@ -3,7 +3,7 @@
  * Handles different types of loading states throughout the app
  */
 
-import { LoadingSpinner, globalLoadingSpinner } from '../components/LoadingSpinner.js';
+import { LoadingSpinner, globalLoadingSpinner } from '../components/LoadingSpinner/LoadingSpinner.js';
 
 export class LoadingManager {
   constructor() {
