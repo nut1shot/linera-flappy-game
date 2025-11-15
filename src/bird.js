@@ -7,8 +7,8 @@ export class Bird {
     this.velocity = 0;
     this.gravity = 0.3;
     this.jumpStrength = -6;
-    this.width = 34;
-    this.height = 24;
+    this.width = 38;
+    this.height = 38;
     this.image = new Image();
     this.image.src = "/assets/bird.png";
     this.baseHeight = 112;
