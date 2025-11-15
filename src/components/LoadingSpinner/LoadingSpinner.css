@@ -220,18 +220,19 @@
   align-items: center;
   width: 100%;
   margin-top: 1rem;
+  position: relative;
 }
-/* 
-.progress-dots .dot:after {
-  content: "";
-  position: absolute;
+
+.progress-dots::after {
+  content: '';
   top: 0;
+  position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .3), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
   animation: shimmer 2s infinite;
-} */
+}
 
 .progress-dots {
   display: flex;
