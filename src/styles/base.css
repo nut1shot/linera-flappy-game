@@ -25,7 +25,7 @@ body {
   margin: 0;
   padding: 0;
   font-family: var(--font-family-primary);
-  background-image: url("/assets/background.png");
+  background-image: url("/assets/background-base.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
