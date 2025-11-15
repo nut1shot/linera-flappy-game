@@ -49,15 +49,6 @@
   text-shadow: 1px 1px 0 var(--color-bg-darkest);
 }
 
-.winner-modal {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 500px;
-  height: 250px;
-  margin: 0 auto;
-}
-
 #tournament-status {
   color: var(--color-success);
 }
@@ -69,3 +60,20 @@
 #tournament-players {
   color: var(--color-info);
 }
+
+/* TEST */
+.winner-modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 500px;
+  height: 250px;
+  margin: 0 auto;
+}
+
+.winner-modal-tournament {
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+}
+/* TEST */
