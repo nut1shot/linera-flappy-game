@@ -13,20 +13,20 @@ export const GAME_CONFIG = {
     WIDTH: 288,
     HEIGHT: 512,
     BACKGROUND_COLOR: "#70c5ce",
-    // Enhanced mobile scaling
+    // Enhanced mobile scaling - ขยายให้เกือบเต็มจอ
     MOBILE_SCALE: {
-      MAX_VIEWPORT_WIDTH_PERCENT: 90,  // Up from 80%
-      MAX_VIEWPORT_HEIGHT_PERCENT: 70, // Up from 55%
-      MAX_SCALE_MULTIPLIER: 2.5,       // Up from 1.2x
-      MIN_WIDTH: 250,                  // Slightly larger minimum
+      MAX_VIEWPORT_WIDTH_PERCENT: 95,  // เกือบเต็มจอ
+      MAX_VIEWPORT_HEIGHT_PERCENT: 90, // เกือบเต็มจอ
+      MAX_SCALE_MULTIPLIER: 2.5,       // เพิ่ม scale multiplier
+      MIN_WIDTH: 250,
       TOUCH_TARGET_SIZE: 44,           // Minimum touch target (Apple HIG)
     },
-    // Desktop scaling
+    // Desktop scaling - ขยายให้เกือบเต็มจอ
     DESKTOP_SCALE: {
-      MAX_VIEWPORT_WIDTH_PERCENT: 50,  // Much more conservative for desktop
-      MAX_VIEWPORT_HEIGHT_PERCENT: 85, // Increased for ultra-wide screens
-      MAX_SCALE_MULTIPLIER: 1.8,       // Max 1.8x scale for desktop
-      MIN_WIDTH: 288,                  // Keep original size as minimum
+      MAX_VIEWPORT_WIDTH_PERCENT: 95,  // เกือบเต็มจอ
+      MAX_VIEWPORT_HEIGHT_PERCENT: 95, // เกือบเต็มจอ
+      MAX_SCALE_MULTIPLIER: 3.5,       // เพิ่ม scale multiplier
+      MIN_WIDTH: 288,
     },
   },
 

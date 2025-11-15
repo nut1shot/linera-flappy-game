@@ -1,7 +1,9 @@
 /* Base Styles - Global Resets and Defaults */
 
 /* CSS Reset */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -23,9 +25,11 @@ body {
   margin: 0;
   padding: 0;
   font-family: var(--font-family-primary);
-  background: linear-gradient(to bottom,
-    #87CEEB 0%, #87CEEB 40%, #98D8E8 70%, #B0E0E6 85%, #F0E68C 95%, #FFE4B5 100%
-  );
+  background-image: url("/assets/background-base.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
   min-height: 100vh;
   overflow: hidden;
   position: relative;
@@ -37,27 +41,44 @@ body {
 
 /* Cloud effect overlay */
 body::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-image:
-    radial-gradient(ellipse 600px 200px at 20% 30%, rgba(255,255,255,0.3), transparent),
-    radial-gradient(ellipse 500px 150px at 80% 20%, rgba(255,255,255,0.2), transparent),
-    radial-gradient(ellipse 400px 100px at 60% 60%, rgba(255,255,255,0.2), transparent);
+  background-image: radial-gradient(
+      ellipse 600px 200px at 20% 30%,
+      rgba(255, 255, 255, 0.3),
+      transparent
+    ),
+    radial-gradient(
+      ellipse 500px 150px at 80% 20%,
+      rgba(255, 255, 255, 0.2),
+      transparent
+    ),
+    radial-gradient(
+      ellipse 400px 100px at 60% 60%,
+      rgba(255, 255, 255, 0.2),
+      transparent
+    );
   pointer-events: none;
   opacity: 0.6;
 }
 
 /* Prevent double-tap zoom on mobile */
-button, a {
+button,
+a {
   touch-action: manipulation;
 }
 
 /* Default heading styles */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-family-primary);
   color: var(--color-text-primary);
   line-height: 1.2;
@@ -97,7 +118,9 @@ button:disabled {
 }
 
 /* Input reset */
-input, textarea, select {
+input,
+textarea,
+select {
   font-family: inherit;
   font-size: inherit;
   color: inherit;
@@ -121,7 +144,8 @@ a:hover {
 }
 
 /* List reset */
-ul, ol {
+ul,
+ol {
   list-style: none;
 }
 
@@ -141,7 +165,7 @@ canvas {
 
 /* Code elements */
 code {
-  font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
   background: rgba(0, 0, 0, 0.2);
   padding: 2px 6px;
   border-radius: var(--radius-sm);

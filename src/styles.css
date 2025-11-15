@@ -1640,9 +1640,7 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(to bottom, 
-    #87CEEB 0%, #87CEEB 40%, #98D8E8 70%, #B0E0E6 85%, #F0E68C 95%, #FFE4B5 100%
-  );
+  background-image: url('/assets/background-base.png');
   min-height: 100vh;
   margin: 0;
   font-family: 'Press Start 2P', cursive;
@@ -2576,7 +2574,6 @@ body::before {
   
   #gameCanvas.mobile-canvas {
     max-width: 95vw !important;
-    max-height: 75vh !important;
   }
   
   /* Enhanced mobile touch targets */

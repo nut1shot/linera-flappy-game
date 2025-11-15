@@ -835,6 +835,8 @@ Please check:
     this.gameEngine.resetGameState();
     this.gameUI.hideStartButton();
     this.gameUI.hideRestartButton();
+    // Close info overlay modal when changing mode
+    this.gameUI.hideInfoOverlay();
 
     this.gameState.setCurrentScreen("mode-selection-screen");
   }
@@ -1255,6 +1257,8 @@ Please check:
     this.gameEngine.resetGameState();
     this.gameUI.hideStartButton();
     this.gameUI.hideRestartButton();
+    // Close info overlay modal when leaving game screen
+    this.gameUI.hideInfoOverlay();
 
     this.gameState.setCurrentScreen("mode-selection-screen");
   }

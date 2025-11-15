@@ -51,38 +51,71 @@
         <canvas id="gameCanvas" width="288" height="512"></canvas>
         <button id="restartBtn" class="restart-button">Restart</button>
         <button id="startBtn" class="start-button">START GAME</button>
+        
+        <!-- Menu Button -->
+        <button id="game-menu-btn" class="game-menu-btn" title="Menu">
+          <span class="menu-icon">☰</span>
+        </button>
       </div>
     </div>
 
-    <div class="info-section">
-      <!-- Current Mode Indicator -->
-      <div class="current-mode-info">
-        <div class="mode-indicator">
-          <span class="mode-label">Mode:</span>
-          <span id="current-mode" class="mode-value">Practice</span>
+    <!-- Info Overlay - แสดงเป็นหน้าจอต่อหน้าจอ -->
+    <div id="info-overlay" class="info-overlay" style="display: none;">
+      <div class="info-overlay-content">
+        <!-- Close Button -->
+        <button id="close-overlay-btn" class="close-overlay-btn">✕</button>
+        
+        <!-- Navigation Buttons -->
+        <div class="info-nav-buttons">
+          <button class="info-nav-btn active" data-section="mode">Mode</button>
+          <button class="info-nav-btn" data-section="player">Player</button>
+          <button class="info-nav-btn" data-section="tournament">Tournament</button>
+          <button class="info-nav-btn" data-section="leaderboard">Leaderboard</button>
+          <button class="info-nav-btn" data-section="chain">Chain</button>
         </div>
-        <button id="change-mode-btn" class="change-mode-btn">Change Mode</button>
-      </div>
 
-      <!-- Player Info Component will be inserted here -->
-      <div id="player-info-container"></div>
+        <!-- Sections Container -->
+        <div class="info-sections-container">
+          <!-- Mode Section -->
+          <div class="info-section-content active" id="section-mode">
+            <div class="current-mode-info">
+              <div class="mode-indicator">
+                <span class="mode-label">Mode:</span>
+                <span id="current-mode" class="mode-value">Practice</span>
+              </div>
+              <button id="change-mode-btn" class="change-mode-btn">Change Mode</button>
+            </div>
+          </div>
 
-      <!-- Tournament Info Component will be inserted here -->
-      <div id="tournament-info-container"></div>
+          <!-- Player Section -->
+          <div class="info-section-content" id="section-player">
+            <div id="player-info-container"></div>
+          </div>
 
-      <!-- Leaderboard Panel Component will be inserted here -->
-      <div id="leaderboard-container"></div>
+          <!-- Tournament Section -->
+          <div class="info-section-content" id="section-tournament">
+            <div id="tournament-info-container"></div>
+          </div>
 
-      <!-- Chain Info -->
-      <div class="chain-info">
-        <div class="linera-badge">
-          <span>Powered by</span>
-          <img src="/assets/linera-logo.png" alt="Linera" width="20" height="20" />
-          <span>Linera Game on Microchain</span>
-        </div>
-        <div class="info-item">
-          <span class="label">Chain ID:</span>
-          <code id="chain-id" class="chain-id-text">Loading…</code>
+          <!-- Leaderboard Section -->
+          <div class="info-section-content" id="section-leaderboard">
+            <div id="leaderboard-container"></div>
+          </div>
+
+          <!-- Chain Section -->
+          <div class="info-section-content" id="section-chain">
+            <div class="chain-info">
+              <div class="linera-badge">
+                <span>Powered by</span>
+                <img src="/assets/linera-logo.png" alt="Linera" width="20" height="20" />
+                <span>Linera Game on Microchain</span>
+              </div>
+              <div class="info-item">
+                <span class="label">Chain ID:</span>
+                <code id="chain-id" class="chain-id-text">Loading…</code>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

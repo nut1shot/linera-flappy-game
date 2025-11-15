@@ -132,17 +132,6 @@ export class GameEngine {
     const canvasCenterX = this.canvas.width / 2;
     const canvasCenterY = this.canvas.height / 4;
 
-    if (this.count > 0) {
-      // Cache score text rendering properties
-      this.ctx.save();
-      this.ctx.font = "bold 20px 'Press Start 2P', cursive";
-      this.ctx.fillStyle = "#fff";
-      this.ctx.textAlign = "center";
-      this.ctx.lineWidth = 3;
-      this.ctx.fillText(this.count, canvasCenterX, 40);
-      this.ctx.restore();
-    }
-
     if (!this.startGame) {
       // Draw bird in initial position
       this.bird.draw();
@@ -205,6 +194,35 @@ export class GameEngine {
     this.pipes = this.pipes.filter((p) => p.x + p.width > 0);
 
     this.drawBase();
+
+    // Draw score on top of everything (highest z-index layer)
+    if (this.count > 0) {
+      // Cache score text rendering properties
+      this.ctx.save();
+      this.ctx.font = "bold 20px 'Press Start 2P', cursive";
+      this.ctx.textAlign = "center";
+      this.ctx.textBaseline = "top";
+      
+      // Draw stroke/outline for better visibility
+      this.ctx.strokeStyle = "#000";
+      this.ctx.lineWidth = 4;
+      this.ctx.lineJoin = "round";
+      this.ctx.miterLimit = 2;
+      
+      // Draw fill
+      this.ctx.fillStyle = "#fff";
+      
+      const scoreText = String(this.count);
+      const scoreX = canvasCenterX;
+      const scoreY = 30;
+      
+      // Draw stroke first (outline)
+      this.ctx.strokeText(scoreText, scoreX, scoreY);
+      // Draw fill on top
+      this.ctx.fillText(scoreText, scoreX, scoreY);
+      
+      this.ctx.restore();
+    }
 
     if (this.showInstructions) {
       this.ctx.save();

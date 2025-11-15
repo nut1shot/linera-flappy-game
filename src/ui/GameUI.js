@@ -7,6 +7,7 @@ export class GameUI {
     this.isInitialized = false;
     this.userRole = "player";
     this.components = {}; // Will hold references to UI components
+    this.currentGameMode = null; // Track current game mode
   }
 
   setComponents(components) {
@@ -178,6 +179,20 @@ export class GameUI {
     document.addEventListener("keydown", (e) => {
       if (e.code === "Space") {
         e.preventDefault();
+        
+        // Check if start button is visible
+        if (this.elements.startBtn && this.elements.startBtn.classList.contains("show")) {
+          this.emit("startGame");
+          return;
+        }
+        
+        // Check if restart button is visible
+        if (this.elements.restartBtn && this.elements.restartBtn.classList.contains("show")) {
+          this.emit("restartGame");
+          return;
+        }
+        
+        // Otherwise, use spacebar for jump (during gameplay)
         this.emit("jump");
       }
     });
@@ -190,6 +205,9 @@ export class GameUI {
         this.emit("jump");
       });
     }
+
+    // Overlay event listeners will be setup when game screen is shown
+    // See setupOverlayEventListeners() method
   }
 
   setCallbacks(callbacks) {
@@ -213,6 +231,11 @@ export class GameUI {
     // Hide DOM-based screens
     const gameScreen = document.getElementById("game-screen");
     if (gameScreen) gameScreen.style.display = "none";
+
+    // Close info overlay modal when switching to a different screen
+    if (screenName !== "game-screen") {
+      this.hideInfoOverlay();
+    }
 
     // Show requested screen
     switch (screenName) {
@@ -239,6 +262,13 @@ export class GameUI {
       case "game-screen":
         if (gameScreen) {
           gameScreen.style.display = "flex";
+          // Setup overlay event listeners when game screen is shown
+          this.setupOverlayEventListeners();
+          // Show menu button initially (game hasn't started yet)
+          // Use setTimeout to ensure DOM is ready
+          setTimeout(() => {
+            this.showMenuButton();
+          }, 100);
         }
         break;
       case "initial-loading-screen":
@@ -246,6 +276,48 @@ export class GameUI {
         break;
       default:
         console.warn(`Unknown screen: ${screenName}`);
+    }
+  }
+
+  setupOverlayEventListeners() {
+    // Menu button
+    const menuBtn = document.getElementById("game-menu-btn");
+    if (menuBtn) {
+      // Remove existing listeners by cloning
+      const newMenuBtn = menuBtn.cloneNode(true);
+      menuBtn.parentNode.replaceChild(newMenuBtn, menuBtn);
+      newMenuBtn.addEventListener("click", () => this.showInfoOverlay());
+      // Ensure menu button is visible when setting up (game hasn't started yet)
+      newMenuBtn.style.display = "flex";
+    }
+
+    // Close overlay button
+    const closeOverlayBtn = document.getElementById("close-overlay-btn");
+    if (closeOverlayBtn) {
+      const newCloseBtn = closeOverlayBtn.cloneNode(true);
+      closeOverlayBtn.parentNode.replaceChild(newCloseBtn, closeOverlayBtn);
+      newCloseBtn.addEventListener("click", () => this.hideInfoOverlay());
+    }
+
+    // Navigation buttons
+    const navButtons = document.querySelectorAll(".info-nav-btn");
+    navButtons.forEach((btn) => {
+      const newBtn = btn.cloneNode(true);
+      btn.parentNode.replaceChild(newBtn, btn);
+      newBtn.addEventListener("click", (e) => {
+        const section = e.target.getAttribute("data-section");
+        this.switchInfoSection(section);
+      });
+    });
+
+    // Close overlay on background click
+    const overlay = document.getElementById("info-overlay");
+    if (overlay) {
+      overlay.addEventListener("click", (e) => {
+        if (e.target === overlay) {
+          this.hideInfoOverlay();
+        }
+      });
     }
   }
 
@@ -360,23 +432,47 @@ export class GameUI {
     if (this.elements.restartBtn) {
       this.elements.restartBtn.classList.add("show");
     }
+    // Show menu button when restart button is shown (game has ended)
+    this.showMenuButton();
   }
 
   hideRestartButton() {
     if (this.elements.restartBtn) {
       this.elements.restartBtn.classList.remove("show");
     }
+    // Hide menu button when restart button is hidden (game is starting)
+    this.hideMenuButton();
   }
 
   showStartButton() {
     if (this.elements.startBtn) {
       this.elements.startBtn.classList.add("show");
     }
+    // Show menu button when start button is shown (game hasn't started yet)
+    this.showMenuButton();
   }
 
   hideStartButton() {
     if (this.elements.startBtn) {
       this.elements.startBtn.classList.remove("show");
+    }
+    // Hide menu button when start button is hidden (game has started - playing)
+    this.hideMenuButton();
+  }
+
+  showMenuButton() {
+    const menuBtn = document.getElementById("game-menu-btn");
+    if (menuBtn) {
+      menuBtn.style.display = "flex";
+      menuBtn.style.visibility = "visible";
+    }
+  }
+
+  hideMenuButton() {
+    const menuBtn = document.getElementById("game-menu-btn");
+    if (menuBtn) {
+      menuBtn.style.display = "none";
+      menuBtn.style.visibility = "hidden";
     }
   }
 
@@ -650,6 +746,8 @@ export class GameUI {
 
   // Game mode UI updates
   updateGameModeDisplay(mode) {
+    this.currentGameMode = mode; // Store current mode
+    
     const currentModeElement = document.getElementById("current-mode");
     const tournamentInfoPanel = document.getElementById("tournament-info");
     const leaderboardTitle = document.getElementById("leaderboard-title");
@@ -668,6 +766,17 @@ export class GameUI {
     if (leaderboardTitle) {
       leaderboardTitle.textContent =
         mode === "practice" ? "Top Players" : "Tournament Leaderboard";
+    }
+
+    // Update Tournament button visibility in overlay navigation
+    this.updateTournamentButtonVisibility();
+  }
+
+  updateTournamentButtonVisibility() {
+    const tournamentNavBtn = document.querySelector('.info-nav-btn[data-section="tournament"]');
+    if (tournamentNavBtn) {
+      // Show Tournament button only in tournament mode
+      tournamentNavBtn.style.display = this.currentGameMode === "tournament" ? "inline-block" : "none";
     }
   }
 
@@ -894,5 +1003,53 @@ export class GameUI {
       console.error("Error formatting date:", error, "timestamp:", timestamp);
       return "Invalid date";
     }
+  }
+
+  // ===== INFO OVERLAY METHODS =====
+
+  showInfoOverlay() {
+    const overlay = document.getElementById("info-overlay");
+    if (overlay) {
+      overlay.style.display = "flex";
+      // Update Tournament button visibility based on current mode
+      this.updateTournamentButtonVisibility();
+      // Show first section by default
+      this.switchInfoSection("mode");
+    }
+  }
+
+  hideInfoOverlay() {
+    const overlay = document.getElementById("info-overlay");
+    if (overlay) {
+      overlay.style.display = "none";
+    }
+  }
+
+  switchInfoSection(sectionName) {
+    // Prevent accessing tournament section in practice mode
+    if (sectionName === "tournament" && this.currentGameMode !== "tournament") {
+      sectionName = "mode"; // Fallback to mode section
+    }
+
+    // Hide all sections
+    const allSections = document.querySelectorAll(".info-section-content");
+    allSections.forEach((section) => {
+      section.classList.remove("active");
+    });
+
+    // Show selected section
+    const targetSection = document.getElementById(`section-${sectionName}`);
+    if (targetSection) {
+      targetSection.classList.add("active");
+    }
+
+    // Update navigation buttons
+    const allNavButtons = document.querySelectorAll(".info-nav-btn");
+    allNavButtons.forEach((btn) => {
+      btn.classList.remove("active");
+      if (btn.getAttribute("data-section") === sectionName) {
+        btn.classList.add("active");
+      }
+    });
   }
 }
