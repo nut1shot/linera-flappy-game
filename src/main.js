@@ -544,7 +544,6 @@ Please check:
   }
 
   async handleGameOver(score, best, isNewHighScore) {
-    console.log("handleGameOver");
     // Submit tournament score on ALL game overs if in tournament mode
     const activeTournament = this.gameState.getActiveTournament();
     const gameMode = this.gameState.getGameMode();
@@ -557,7 +556,6 @@ Please check:
       // Only submit if player is actually participating in the tournament
       if (this.gameState.isPlayerInTournament(activeTournament.id)) {
         try {
-          console.log("isPlayerInTournament");
           await this.gameState.submitTournamentScore(
             activeTournament.id,
             score
@@ -1128,7 +1126,6 @@ Please check:
   }
 
   async loadTournamentLeaderboard(tournamentId) {
-    console.log("loadTournamentLeaderboard");
     try {
       // Get tournament leaderboard from blockchain
       const tournamentLeaderboard =
@@ -1344,7 +1341,6 @@ Please check:
 
   // Blockchain integration
   async submitScoreToLeaderboard(score) {
-    console.log("submitScoreToLeaderboard");
     try {
       if (!this.gameState.getPlayerName()) {
         return;
@@ -1620,10 +1616,8 @@ Please check:
   }
 
   async joinTournamentFromModal(tournamentId) {
-    console.log('joinTournamentFromModal called with ID:', tournamentId);
     // Join the tournament that's currently displayed in the modal
     if (!tournamentId) {
-      console.error('No tournament ID provided');
       return;
     }
 
@@ -1637,12 +1631,9 @@ Please check:
   }
 
   async refreshTournamentLeaderboard(tournamentId) {
-    console.log('refreshTournamentLeaderboard called with ID:', tournamentId);
     // Refresh the currently displayed tournament leaderboard
     const targetTournamentId = tournamentId || this.tournamentLeaderboardModal.currentTournamentId;
-    console.log('Target tournament ID:', targetTournamentId);
     if (!targetTournamentId) {
-      console.error('No tournament ID provided or currently displayed in modal');
       return;
     }
 

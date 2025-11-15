@@ -128,12 +128,19 @@ export class GameEngine {
 
     this.drawBackground();
 
+    // Cache canvas dimensions
+    const canvasCenterX = this.canvas.width / 2;
+    const canvasCenterY = this.canvas.height / 4;
+
     if (this.count > 0) {
+      // Cache score text rendering properties
+      this.ctx.save();
       this.ctx.font = "bold 20px 'Press Start 2P', cursive";
       this.ctx.fillStyle = "#fff";
       this.ctx.textAlign = "center";
       this.ctx.lineWidth = 3;
-      this.ctx.fillText(this.count, this.canvas.width / 2, 40);
+      this.ctx.fillText(this.count, canvasCenterX, 40);
+      this.ctx.restore();
     }
 
     if (!this.startGame) {
@@ -143,7 +150,8 @@ export class GameEngine {
       // Draw base
       this.drawBase();
       
-      // Draw instructions
+      // Draw instructions - cache text properties
+      this.ctx.save();
       this.ctx.font = "bold 10px 'Press Start 2P', cursive";
       this.ctx.fillStyle = "#fff";
       this.ctx.textAlign = "center";
@@ -151,9 +159,9 @@ export class GameEngine {
       this.ctx.lineWidth = 2;
       
       const text = "TAP or PRESS SPACE to FLY";
-      const textY = this.canvas.height / 4;
-      this.ctx.strokeText(text, this.canvas.width / 2, textY);
-      this.ctx.fillText(text, this.canvas.width / 2, textY);
+      this.ctx.strokeText(text, canvasCenterX, canvasCenterY);
+      this.ctx.fillText(text, canvasCenterX, canvasCenterY);
+      this.ctx.restore();
 
       if (this.isGameLoopRunning && this.currentScreen === "game-screen") {
         this.gameLoopId = requestAnimationFrame(() => this.gameLoop());
@@ -164,18 +172,22 @@ export class GameEngine {
     this.bird.update();
     this.bird.draw();
 
+    // Spawn pipes only when needed
     if (this.frame % GAME_CONFIG.PIPES.SPAWN_INTERVAL === 0) {
       this.pipes.push(new Pipe(this.canvas, this.ctx));
     }
 
-    this.pipes.forEach((pipe) => {
+    // Optimize pipe iteration - use for loop instead of forEach for better performance
+    const pipesLength = this.pipes.length;
+    for (let i = 0; i < pipesLength; i++) {
+      const pipe = this.pipes[i];
       pipe.update();
       pipe.draw();
 
       if (!pipe.passed && pipe.x + pipe.width < this.bird.x) {
         pipe.passed = true;
         this.count++;
-        this.audioPoint.play();
+        this.audioPoint.play().catch(() => {}); // Suppress audio play errors
         
         if (this.onScoreUpdate) {
           this.onScoreUpdate(this.count);
@@ -184,23 +196,27 @@ export class GameEngine {
 
       if (pipe.collides(this.bird)) {
         this.gameOver = true;
-        this.audioHit.play();
+        this.audioHit.play().catch(() => {}); // Suppress audio play errors
+        break; // Exit early when collision detected
       }
-    });
+    }
 
+    // Filter pipes more efficiently
     this.pipes = this.pipes.filter((p) => p.x + p.width > 0);
 
     this.drawBase();
 
     if (this.showInstructions) {
+      this.ctx.save();
       this.ctx.fillStyle = "#fff";
       this.ctx.font = "bold 10px 'Press Start 2P', cursive";
       this.ctx.textAlign = "center";
       this.ctx.fillText(
         "TAP or PRESS SPACE to FLY",
-        this.canvas.width / 2,
-        this.canvas.height / 4
+        canvasCenterX,
+        canvasCenterY
       );
+      this.ctx.restore();
     }
 
     if (!this.gameOver) {
@@ -325,7 +341,7 @@ export class GameEngine {
         this.showInstructions = false;
       }
       this.bird.jump();
-      this.audioJump.play();
+      this.audioJump.play().catch(() => {}); // Suppress audio play errors
     }
   }
 

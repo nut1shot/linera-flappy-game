@@ -22,20 +22,26 @@ export class Pipe {
   }
 
   draw() {
-    this.ctx.drawImage(
-      this.topImage,
-      this.x,
-      this.top - this.topImage.height,
-      this.width,
-      this.topImage.height
-    );
-    this.ctx.drawImage(
-      this.bottomImage,
-      this.x,
-      this.bottom,
-      this.width,
-      this.canvas.height - this.bottom
-    );
+    // Only draw if images are loaded to avoid errors
+    if (this.topImage.complete && this.topImage.naturalWidth !== 0) {
+      this.ctx.drawImage(
+        this.topImage,
+        this.x,
+        this.top - this.topImage.height,
+        this.width,
+        this.topImage.height
+      );
+    }
+    
+    if (this.bottomImage.complete && this.bottomImage.naturalWidth !== 0) {
+      this.ctx.drawImage(
+        this.bottomImage,
+        this.x,
+        this.bottom,
+        this.width,
+        this.canvas.height - this.bottom
+      );
+    }
   }
 
   collides(bird) {

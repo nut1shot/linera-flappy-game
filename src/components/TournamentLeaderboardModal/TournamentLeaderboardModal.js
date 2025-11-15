@@ -118,13 +118,8 @@ export class TournamentLeaderboardModal {
     const joinBtn = this.element.querySelector('#join-tournament-from-modal-btn');
     if (joinBtn) {
       joinBtn.addEventListener('click', () => {
-        console.log('Join button clicked');
-        console.log('onJoinCallback:', this.onJoinCallback);
-        console.log('currentTournamentId:', this.currentTournamentId);
         if (this.onJoinCallback && this.currentTournamentId) {
           this.onJoinCallback(this.currentTournamentId);
-        } else {
-          console.warn('Join callback or tournament ID missing');
         }
       });
     }
@@ -133,13 +128,8 @@ export class TournamentLeaderboardModal {
     const refreshBtn = this.element.querySelector('#refresh-tournament-leaderboard');
     if (refreshBtn) {
       refreshBtn.addEventListener('click', () => {
-        console.log('Refresh button clicked');
-        console.log('onRefreshCallback:', this.onRefreshCallback);
-        console.log('currentTournamentId:', this.currentTournamentId);
         if (this.onRefreshCallback && this.currentTournamentId) {
           this.onRefreshCallback(this.currentTournamentId);
-        } else {
-          console.warn('Refresh callback or tournament ID missing');
         }
       });
     }

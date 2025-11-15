@@ -241,7 +241,6 @@ export class TournamentList {
         case 'edit':
         case 'delete':
           // Admin actions - can be handled with additional callbacks if needed
-          console.log(`Admin action: ${action} on tournament ${tournamentId}`);
           break;
       }
     });
