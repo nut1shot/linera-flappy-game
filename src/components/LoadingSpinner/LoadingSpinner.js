@@ -616,3 +616,4 @@ export class LoadingSpinner {
 
 // Export singleton instance for convenience
 export const globalLoadingSpinner = new LoadingSpinner();
+
