@@ -493,7 +493,7 @@ export class LoadingSpinner {
         
         <div class="loading-text-container">
           <p class="loading-message" id="loading-message">${message}</p>
-          <div class="loading-progress">
+          <div class="loading-progress2">
             <div class="progress-dots">
               <span class="dot"></span>
               <span class="dot"></span>
@@ -616,4 +616,3 @@ export class LoadingSpinner {
 
 // Export singleton instance for convenience
 export const globalLoadingSpinner = new LoadingSpinner();
-
