@@ -221,6 +221,17 @@
   width: 100%;
   margin-top: 1rem;
 }
+/* 
+.progress-dots .dot:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .3), transparent);
+  animation: shimmer 2s infinite;
+} */
 
 .progress-dots {
   display: flex;
@@ -243,6 +254,8 @@
     inset -2px -2px 0 rgba(0, 0, 0, 0.3);
   animation: pixelDotBounce 1.4s ease-in-out infinite both;
 }
+
+
 
 .progress-dots .dot:nth-child(1) {
   animation-delay: -0.56s;
