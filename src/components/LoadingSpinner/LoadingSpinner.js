@@ -6,7 +6,6 @@ export class LoadingSpinner {
   constructor() {
     this.element = null;
     this.currentMessage = "";
-    this.currentContext = "default";
     this.isVisible = false;
   }
 
@@ -540,25 +539,20 @@ export class LoadingSpinner {
    * @param {HTMLElement} container - Container to append to (defaults to body)
    */
   show(message = "Loading...", context = "default", container = document.body) {
-    if (this.isVisible && this.element) {
+    if (this.isVisible) {
       this.updateMessage(message);
       return;
     }
 
     const spinner = this.create(message, context);
-    this.element = spinner;
-    this.currentMessage = message;
-    this.currentContext = context;
 
     container.appendChild(spinner);
     this.isVisible = true;
 
-    // Trigger animation - use setTimeout to ensure DOM is ready
-    setTimeout(() => {
-      if (spinner && spinner.parentNode) {
-        spinner.classList.add("visible");
-      }
-    }, 10);
+    // Trigger animation
+    requestAnimationFrame(() => {
+      spinner.classList.add("visible");
+    });
   }
 
   /**
@@ -583,23 +577,12 @@ export class LoadingSpinner {
    * @param {string} message - New message
    */
   updateMessage(message) {
-    if (!this.element) {
-      // If element doesn't exist, create and show it
-      this.show(message, this.currentContext || "default");
-      return;
-    }
+    if (!this.element) return;
 
-    const messageEl = this.element.querySelector(".loading-message");
+    const messageEl = this.element.querySelector("#loading-message");
     if (messageEl) {
       messageEl.textContent = message;
       this.currentMessage = message;
-    } else {
-      // Fallback: try to find by id
-      const messageElById = this.element.querySelector("#loading-message");
-      if (messageElById) {
-        messageElById.textContent = message;
-        this.currentMessage = message;
-      }
     }
   }
 
