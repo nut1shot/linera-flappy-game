@@ -7,7 +7,7 @@ export class AuthManager {
     this.currentUser = null;
     this.isAuthenticated = false;
     this.sessionExpiry = null;
-    // Account lockout removed per user request
+    // Account lockout removed per users request
     
     // Initialize default accounts on blockchain
     this.initializeDefaultAccounts();
