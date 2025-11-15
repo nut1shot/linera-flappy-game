@@ -627,38 +627,40 @@ Please check:
   }
 
   async handleLogin() {
-    const username = document.getElementById("auth-username").value.trim();
-    const password = document.getElementById("auth-password").value;
+    // Use component method to get form values
+    const formValues = this.authModal.getFormValues();
+    const username = formValues.username;
+    const password = formValues.password;
 
     if (!username || !password) {
-      this.showAuthError("Please enter both username and password");
+      this.authModal.showValidation("Please enter both username and password");
       return;
     }
 
-    // Show loading state
-    this.setAuthLoadingState(true);
-    this.clearAuthError();
+    // Show loading state using component method
+    this.authModal.setLoading(true);
+    this.authModal.hideValidation();
 
     try {
       // Step 1: Authenticate user
-      this.updateAuthLoadingMessage("Authenticating user...");
+      this.authModal.setTitle("Authenticating user...");
       const user = await this.authManager.login(username, password);
       this.gameState.setAuthenticatedUser(user);
 
       // Step 2: Setup blockchain game
-      this.updateAuthLoadingMessage("Setting up blockchain game...");
+      this.authModal.setTitle("Setting up blockchain game...");
       await this.setupBlockchainGame();
 
       // Step 3: Complete
-      this.updateAuthLoadingMessage("Login successful!");
+      this.authModal.setTitle("Login successful!");
 
       // Hide loading and proceed
-      this.setAuthLoadingState(false);
+      this.authModal.setLoading(false);
       this.gameUI.hideAuthModal();
       this.gameState.setCurrentScreen("mode-selection-screen");
     } catch (error) {
-      this.setAuthLoadingState(false);
-      this.showAuthError(error.message);
+      this.authModal.setLoading(false);
+      this.authModal.showValidation(error.message);
     }
   }
 
@@ -713,109 +715,64 @@ Please check:
 
   showLogin() {
     // Single form approach - no need to switch forms
-    document.getElementById("auth-title").textContent =
-      "Welcome to Linera Flappy!";
-    this.clearAuthError();
+    this.authModal.setTitle("Welcome to Linera Flappy!");
+    this.authModal.hideValidation();
   }
 
   showRegister() {
     // Single form approach - registration is handled by login
-    document.getElementById("auth-title").textContent =
-      "Welcome to Linera Flappy!";
-    this.clearAuthError();
+    this.authModal.setTitle("Welcome to Linera Flappy!");
+    this.authModal.hideValidation();
   }
 
   togglePasswordVisibility(fieldId) {
+    // Password toggle is handled by AuthModal component's event listeners
+    // This method is kept for backward compatibility but may not be needed
     const field = document.getElementById(fieldId);
     const toggle = document.getElementById(`toggle-${fieldId}`);
 
-    if (field.type === "password") {
-      field.type = "text";
-      toggle.textContent = "🙈";
-    } else {
-      field.type = "password";
-      toggle.textContent = "👁";
+    if (field && toggle) {
+      if (field.type === "password") {
+        field.type = "text";
+        toggle.textContent = "🙈";
+      } else {
+        field.type = "password";
+        toggle.textContent = "👁";
+      }
     }
   }
 
   showAuthError(message) {
-    const errorDiv = document.getElementById("auth-validation");
-    const errorMessage = document.getElementById("auth-validation-message");
-
-    if (errorDiv && errorMessage) {
-      errorMessage.textContent = message;
-      errorDiv.style.display = "block";
-      errorDiv.style.color = ""; // Reset to default error color
-      errorDiv.style.backgroundColor = ""; // Reset to default error background
-    }
+    // Use component method
+    this.authModal.showValidation(message);
   }
 
   clearAuthError() {
-    document.getElementById("auth-validation").style.display = "none";
+    // Use component method
+    this.authModal.hideValidation();
   }
 
   setAuthLoadingState(isLoading) {
-    const authBtn = document.getElementById("auth-btn");
-    const usernameInput = document.getElementById("auth-username");
-    const passwordInput = document.getElementById("auth-password");
-
-    if (isLoading) {
-      // Disable form elements
-      if (authBtn) {
-        authBtn.disabled = true;
-        authBtn.textContent = "Loading...";
-        authBtn.classList.add("loading");
-      }
-      if (usernameInput) usernameInput.disabled = true;
-      if (passwordInput) passwordInput.disabled = true;
-
-      // Show loading message
-      this.showAuthLoadingMessage("Connecting...");
-    } else {
-      // Enable form elements
-      if (authBtn) {
-        authBtn.disabled = false;
-        authBtn.textContent = "Login / Register";
-        authBtn.classList.remove("loading");
-      }
-      if (usernameInput) usernameInput.disabled = false;
-      if (passwordInput) passwordInput.disabled = false;
-
-      // Hide loading message
-      this.hideAuthLoadingMessage();
-    }
+    // Use component method
+    this.authModal.setLoading(isLoading);
   }
 
   showAuthLoadingMessage(message) {
-    const authValidation = document.getElementById("auth-validation");
-    const authValidationMessage = document.getElementById(
-      "auth-validation-message"
-    );
-
-    if (authValidation && authValidationMessage) {
-      authValidationMessage.textContent = message;
-      authValidation.style.display = "block";
-      authValidation.style.color = "#4CAF50"; // Green for loading
-      authValidation.style.backgroundColor = "#E8F5E8";
-    }
+    // Show loading message via validation area (green color)
+    // Note: AuthModal component doesn't have a separate loading message method
+    // So we use showValidation with a different style, or we can extend the component
+    // For now, we'll use setTitle to show loading message
+    this.authModal.setTitle(message);
   }
 
   updateAuthLoadingMessage(message) {
-    const authValidationMessage = document.getElementById(
-      "auth-validation-message"
-    );
-    if (authValidationMessage) {
-      authValidationMessage.textContent = message;
-    }
+    // Update loading message via title
+    this.authModal.setTitle(message);
   }
 
   hideAuthLoadingMessage() {
-    const authValidation = document.getElementById("auth-validation");
-    if (authValidation) {
-      authValidation.style.display = "none";
-      authValidation.style.color = ""; // Reset color
-      authValidation.style.backgroundColor = ""; // Reset background
-    }
+    // Reset title to default
+    this.authModal.setTitle("Welcome to Linera Flappy!");
   }
 
   showRegisterError(message) {
@@ -826,6 +783,14 @@ Please check:
   clearRegisterError() {
     // Registration errors are now handled by clearAuthError
     this.clearAuthError();
+  }
+
+  // Helper method to show auth modal with callback
+  showAuthModal() {
+    this.authModal.show(() => {
+      // Callback when auth form is submitted
+      this.handleLogin();
+    });
   }
 
   async logout() {

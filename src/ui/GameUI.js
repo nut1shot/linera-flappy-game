@@ -118,26 +118,8 @@ export class GameUI {
       );
     }
 
-    // Auth modal
-    if (this.elements.authBtn) {
-      this.elements.authBtn.addEventListener("click", () => this.emit("login"));
-    }
-
-    // Password toggles
-    this.elements.passwordToggles.forEach((toggle) => {
-      toggle.addEventListener("click", () => {
-        const fieldId = toggle.id.replace("toggle-", "");
-        this.emit("togglePassword", fieldId);
-      });
-    });
-
-    // Enter key handlers for auth form
-    const authInputs = document.querySelectorAll("#auth-form input");
-    authInputs.forEach((input) => {
-      input.addEventListener("keypress", (e) => {
-        if (e.key === "Enter") this.emit("login");
-      });
-    });
+    // Auth modal - event listeners are handled by AuthModal component
+    // No need to set up here as component manages its own events
 
     // Mode selection
     if (this.elements.practiceBtn) {
@@ -305,7 +287,12 @@ export class GameUI {
   // Username modal
   showAuthModal() {
     if (this.components.authModal) {
-      this.components.authModal.show();
+      // Show modal with callback to handleLogin
+      this.components.authModal.show(() => {
+        // This callback will be called when auth form is submitted
+        // The actual login handling is done via the login callback in setupCallbacks
+        this.emit("login");
+      });
     }
   }
 

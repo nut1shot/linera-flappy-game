@@ -91,13 +91,24 @@ export class AuthModal {
       });
     }
 
+    // Auth button click handler
+    const authBtn = this.element.querySelector('#auth-btn');
+    if (authBtn) {
+      authBtn.addEventListener('click', () => {
+        if (this.onAuthCallback) {
+          this.onAuthCallback();
+        }
+      });
+    }
+
     // Handle Enter key on inputs
     const usernameInput = this.element.querySelector('#auth-username');
     if (usernameInput && passwordInput) {
       const handleEnter = (e) => {
         if (e.key === 'Enter') {
-          const authBtn = this.element.querySelector('#auth-btn');
-          if (authBtn) authBtn.click();
+          if (this.onAuthCallback) {
+            this.onAuthCallback();
+          }
         }
       };
       usernameInput.addEventListener('keypress', handleEnter);
