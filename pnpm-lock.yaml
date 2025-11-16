@@ -9,11 +9,11 @@ importers:
   .:
     dependencies:
       '@linera/client':
-        specifier: 0.15.4
-        version: 0.15.4
+        specifier: 0.15.6
+        version: 0.15.6
       '@linera/signer':
-        specifier: 0.15.4
-        version: 0.15.4(webextension-polyfill@0.12.0)
+        specifier: 0.15.6
+        version: 0.15.6(webextension-polyfill@0.12.0)
       ethers:
         specifier: ^6.15.0
         version: 6.15.0
@@ -181,11 +181,11 @@ packages:
     resolution: {integrity: sha512-zQ0IqbdX8FZ9aw11vP+dZkKDkS+kgIvQPHnSAXzP9pLu+Rfu3D3XEeLbicvoXJTYnhZiPmsZUxgdzXwNKxRPbA==}
     engines: {node: '>=14'}
 
-  '@linera/client@0.15.4':
-    resolution: {integrity: sha512-++PBvJ7qGduE68rf6d+9CCx+oHnwbRYNdX1R+PIdpuxB7MxoHru5eChMQu5RLHkNgOpbwGClEmioFsWr1+zSUw==}
+  '@linera/client@0.15.6':
+    resolution: {integrity: sha512-rgaKYUY+pJqr3DiHPLwqasVVosijD32H6wsfibCBlcSQcZjBhJZei0KcmEalzeWYmXzyzLqshlZqTiNgBrsLHw==}
 
-  '@linera/signer@0.15.4':
-    resolution: {integrity: sha512-+b8+3TmqwO06BZSabD83/X7Fe9uazlrw8Sdly29+42JbA4k+RmCpoPup4pz5d/I11TsafivzPhOlEaloqzsAOQ==}
+  '@linera/signer@0.15.6':
+    resolution: {integrity: sha512-sUpnRrgpBpKgQGUSFvKtci4vLBb0CG9Rdh8SHfXV+xJ9GlU44gaLh4PZGs6Z8jJJ3ADWT39JGQeMKCfyMNp+rw==}
 
   '@metamask/json-rpc-engine@10.1.1':
     resolution: {integrity: sha512-j2epKbA4nqQkrdPFjWWfOzXlpjNOJR4vETLodR4X1/UQIftoA5S0X3mteSmp8xOOpSzF8a2UY17zBjfAB8FqNA==}
@@ -639,11 +639,11 @@ snapshots:
       ethereum-cryptography: 2.2.1
       micro-ftch: 0.3.1
 
-  '@linera/client@0.15.4': {}
+  '@linera/client@0.15.6': {}
 
-  '@linera/signer@0.15.4(webextension-polyfill@0.12.0)':
+  '@linera/signer@0.15.6(webextension-polyfill@0.12.0)':
     dependencies:
-      '@linera/client': 0.15.4
+      '@linera/client': 0.15.6
       '@metamask/providers': 22.1.1(webextension-polyfill@0.12.0)
       ethers: 6.15.0
     transitivePeerDependencies:
