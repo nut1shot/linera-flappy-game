@@ -21,10 +21,15 @@ export class GameEngine {
     this.showInstructions = true;
     this.startGame = false;
     this.gameStarted = false; // Controls if the game can be played
-    
+
     // Game loop control
     this.gameLoopId = null;
     this.isGameLoopRunning = false;
+
+    // Anti-cheat proof tracking
+    this.jumpCount = 0;
+    this.gameStartTime = null;
+    this.gameEndTime = null;
     
     // Load images
     this.bgImage = new Image();
@@ -185,6 +190,7 @@ export class GameEngine {
 
       if (pipe.collides(this.bird)) {
         this.gameOver = true;
+        this.gameEndTime = Date.now(); // Record game end time for anti-cheat proof
         this.audioHit.play().catch(() => {}); // Suppress audio play errors
         break; // Exit early when collision detected
       }
@@ -316,8 +322,11 @@ export class GameEngine {
     this.startGame = false;
     this.gameStarted = false; // Reset game control flag
 
+    // Reset anti-cheat proof tracking
+    this.resetProofTracking();
+
     this.clearCanvas();
-    
+
     // Render initial state immediately
     this.renderInitialState();
   }
@@ -358,7 +367,14 @@ export class GameEngine {
         this.startGame = true;
         this.showInstructions = false;
       }
+
+      // Start timing on first jump (if not already started)
+      if (!this.gameStartTime) {
+        this.gameStartTime = Date.now();
+      }
+
       this.bird.jump();
+      this.jumpCount++; // Track jump count for anti-cheat proof
       this.audioJump.play().catch(() => {}); // Suppress audio play errors
     }
   }
@@ -368,6 +384,10 @@ export class GameEngine {
     this.gameStarted = true;
     this.startGame = true;
     this.showInstructions = false;
+    // Start timing when game controls are enabled
+    if (!this.gameStartTime) {
+      this.gameStartTime = Date.now();
+    }
   }
 
   getScore() {
@@ -384,5 +404,36 @@ export class GameEngine {
 
   isGameOverState() {
     return this.gameOver;
+  }
+
+  // Anti-cheat methods
+  getGameProof() {
+    // Return proof data for verification
+    const gameDurationMs = this.gameEndTime && this.gameStartTime
+      ? this.gameEndTime - this.gameStartTime
+      : 0;
+
+    const proof = {
+      pipes_passed: this.count,
+      game_duration_ms: gameDurationMs,
+      jump_count: this.jumpCount,
+      final_score: this.count,
+    };
+
+    console.log("GameEngine.getGameProof:", {
+      proof,
+      gameStartTime: this.gameStartTime,
+      gameEndTime: this.gameEndTime,
+      duration: gameDurationMs
+    });
+
+    return proof;
+  }
+
+  resetProofTracking() {
+    // Reset all anti-cheat tracking variables
+    this.jumpCount = 0;
+    this.gameStartTime = null;
+    this.gameEndTime = null;
   }
 }

@@ -1,5 +1,6 @@
 import { LineraClient } from "./blockchain/LineraClient.js";
 import { TournamentModal } from "./ui/TournamentModal.js";
+import { ProofHistoryModal } from "./ui/ProofHistoryModal.js";
 import { GameEngine } from "./game/GameEngine.js";
 import { GameState } from "./game/GameState.js";
 import { GameUI } from "./ui/GameUI.js";
@@ -24,6 +25,7 @@ class FlappyGame {
     this.lineraClient = new LineraClient();
     this.authManager = new AuthManager(this.lineraClient);
     this.tournamentModal = new TournamentModal(this.lineraClient);
+    this.proofHistoryModal = new ProofHistoryModal(this.lineraClient);
     this.gameState = new GameState();
     this.gameState.setBlockchainClient(this.lineraClient); // Set blockchain client
     this.gameUI = new GameUI();
@@ -42,6 +44,9 @@ class FlappyGame {
     this.canvas = document.getElementById("gameCanvas");
     this.ctx = this.canvas.getContext("2d");
     this.gameEngine = new GameEngine(this.canvas, this.ctx);
+
+    // Anti-cheat session tracking
+    this.currentGameSession = null;
 
     // Initialize
     this.initialize();
@@ -246,6 +251,9 @@ class FlappyGame {
     }
 
     // Global functions for onclick handlers (backward compatibility)
+
+    // Expose proof history modal globally
+    window.proofHistoryModal = this.proofHistoryModal;
 
     window.selectTournament = async (tournamentId) => {
       await this.selectTournament(tournamentId);
@@ -453,7 +461,7 @@ Please check:
   }
 
   // Game control methods
-  startGame() {
+  async startGame() {
     // Check if we're in tournament mode and tournament is not yet active
     const gameMode = this.gameState.getGameMode();
     const activeTournament = this.gameState.getActiveTournament();
@@ -476,13 +484,16 @@ Please check:
         return;
       }
     }
+
+    // Start anti-cheat game session
+    await this.startGameSession();
 
     this.gameUI.hideStartButton();
     // Enable game controls and start the game
     this.gameEngine.enableGameControls();
   }
 
-  restartGame() {
+  async restartGame() {
     // Check if we're in tournament mode and tournament is not yet active
     const gameMode = this.gameState.getGameMode();
     const activeTournament = this.gameState.getActiveTournament();
@@ -505,6 +516,9 @@ Please check:
         return;
       }
     }
+
+    // Start new anti-cheat game session
+    await this.startGameSession();
 
     this.gameEngine.resetGameState();
     this.gameUI.hideRestartButton();
@@ -544,6 +558,13 @@ Please check:
   }
 
   async handleGameOver(score, best, isNewHighScore) {
+    // Submit verified score with anti-cheat proof FIRST
+    const verifiedSubmitted = await this.submitVerifiedScore(score);
+
+    if (!verifiedSubmitted) {
+      console.warn("Verified score submission failed, falling back to legacy submission");
+    }
+
     // Submit tournament score on ALL game overs if in tournament mode
     const activeTournament = this.gameState.getActiveTournament();
     const gameMode = this.gameState.getGameMode();
@@ -556,6 +577,8 @@ Please check:
       // Only submit if player is actually participating in the tournament
       if (this.gameState.isPlayerInTournament(activeTournament.id)) {
         try {
+          // Legacy submission for backwards compatibility
+          // (can be removed once anti-cheat is fully deployed)
           await this.gameState.submitTournamentScore(
             activeTournament.id,
             score
@@ -596,6 +619,130 @@ Please check:
       // to ensure ALL tournament scores are submitted, not just high scores
     } catch (error) {
       console.error("Failed to submit high score:", error);
+    }
+  }
+
+  // Anti-cheat session management
+  async startGameSession() {
+    let spinner;
+    try {
+      const user = this.gameState.getAuthenticatedUser();
+      if (!user) {
+        console.warn("No authenticated user for game session");
+        return;
+      }
+
+      const gameMode = this.gameState.getGameMode();
+      const activeTournament = this.gameState.getActiveTournament();
+
+      // Determine tournament ID if in tournament mode
+      const tournamentId = (gameMode === "tournament" && activeTournament)
+        ? activeTournament.id
+        : null;
+
+      // Show loading spinner
+      spinner = Loading.custom('Starting game session...', 'game-session');
+
+      // Generate session ID on frontend (to match what we'll send to blockchain)
+      const sessionId = `session_${Date.now()}_${user.username}`;
+
+      // Start session on blockchain with our generated session ID
+      const response = await this.lineraClient.startGameSession(
+        sessionId,
+        user.username,
+        tournamentId
+      );
+
+      // Store session ID for later use
+      this.currentGameSession = {
+        sessionId: sessionId,  // Use the generated ID we sent to blockchain
+        username: user.username,
+        tournamentId: tournamentId,
+        startTime: Date.now()
+      };
+
+      // Reset proof tracking in game engine
+      this.gameEngine.resetProofTracking();
+
+      console.log("Game session started:", this.currentGameSession);
+    } catch (error) {
+      console.error("Failed to start game session:", error);
+      // Continue playing even if session start fails (graceful degradation)
+      this.currentGameSession = null;
+    } finally {
+      // Hide loading spinner
+      if (spinner) {
+        setTimeout(() => spinner.hide(), 300);
+      }
+    }
+  }
+
+  async submitVerifiedScore(score) {
+    let spinner;
+    try {
+      // Don't submit if score is 0 (no pipes passed)
+      if (score === 0) {
+        console.log("Skipping verified score submission for score of 0");
+        this.currentGameSession = null;
+        return false;
+      }
+
+      if (!this.currentGameSession) {
+        console.warn("No active game session for score submission");
+        return false;
+      }
+
+      const user = this.gameState.getAuthenticatedUser();
+      if (!user) {
+        console.warn("No authenticated user for score submission");
+        return false;
+      }
+
+      // Get proof data from game engine
+      const proof = this.gameEngine.getGameProof();
+
+      // Validate proof has correct data
+      if (proof.pipes_passed !== score || proof.final_score !== score) {
+        console.error("Proof data mismatch with score", { proof, score });
+        this.currentGameSession = null;
+        return false;
+      }
+
+      console.log("Submitting verified score:", {
+        session: this.currentGameSession,
+        proof: proof
+      });
+
+      // Show loading spinner
+      const gameMode = this.currentGameSession.tournamentId ? 'tournament' : 'practice';
+      spinner = Loading.custom(
+        `Submitting verified score (${score} points)...`,
+        'score-submission'
+      );
+
+      // Submit to blockchain with proof
+      await this.lineraClient.submitVerifiedScore(
+        this.currentGameSession.sessionId,
+        user.username,
+        this.currentGameSession.tournamentId,
+        proof
+      );
+
+      console.log("Verified score submitted successfully");
+
+      // Clear current session
+      this.currentGameSession = null;
+
+      return true;
+    } catch (error) {
+      console.error("Failed to submit verified score:", error);
+      this.currentGameSession = null;
+      return false;
+    } finally {
+      // Hide loading spinner
+      if (spinner) {
+        setTimeout(() => spinner.hide(), 500);
+      }
     }
   }
 

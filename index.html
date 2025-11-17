@@ -71,6 +71,7 @@
           <button class="info-nav-btn" data-section="player">Player</button>
           <button class="info-nav-btn" data-section="tournament">Tournament</button>
           <button class="info-nav-btn" data-section="leaderboard">Leaderboard</button>
+          <button class="info-nav-btn" data-section="proofs">Proofs</button>
           <button class="info-nav-btn" data-section="chain">Chain</button>
         </div>
 
@@ -100,6 +101,36 @@
           <!-- Leaderboard Section -->
           <div class="info-section-content" id="section-leaderboard">
             <div id="leaderboard-container"></div>
+          </div>
+
+          <!-- Proofs Section -->
+          <div class="info-section-content" id="section-proofs">
+            <div class="proofs-header">
+              <h3>Score Verification Proofs</h3>
+              <div class="proofs-filters">
+                <div class="proofs-filter-group">
+                  <label for="proof-status-filter">Status:</label>
+                  <select id="proof-status-filter" class="proof-filter-dropdown">
+                    <option value="all">All</option>
+                    <option value="accepted">✓ Accepted</option>
+                    <option value="rejected">✗ Rejected</option>
+                    <option value="pending">⏳ Pending</option>
+                  </select>
+                </div>
+                <div class="proofs-filter-group">
+                  <label for="proof-mode-filter">Mode:</label>
+                  <select id="proof-mode-filter" class="proof-filter-dropdown">
+                    <option value="all">All Modes</option>
+                    <option value="practice">Practice</option>
+                    <option value="tournament">Tournament</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div id="proof-history-container" class="proof-history-container">
+              <div class="loading-message">Loading proof history...</div>
+            </div>
           </div>
 
           <!-- Chain Section -->

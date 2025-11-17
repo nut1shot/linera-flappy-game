@@ -1051,5 +1051,10 @@ export class GameUI {
         btn.classList.add("active");
       }
     });
+
+    // Load proof history when proofs section is activated
+    if (sectionName === "proofs" && window.proofHistoryModal) {
+      window.proofHistoryModal.loadAndDisplayProofHistory();
+    }
   }
 }

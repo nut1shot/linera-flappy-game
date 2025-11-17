@@ -2977,3 +2977,454 @@ input:disabled {
   opacity: 0.7;
   cursor: not-allowed;
 }
+
+/* ========================================
+   PROOF HISTORY STYLES
+   ======================================== */
+
+/* Proofs Header */
+.proofs-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #87CEEB;
+}
+
+.proofs-header h3 {
+  margin: 0;
+  color: #87CEEB;
+  font-size: 18px;
+  font-family: 'Press Start 2P', cursive;
+}
+
+.proofs-filters {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.proofs-filter-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 150px;
+}
+
+.proofs-filter-group label {
+  font-size: 11px;
+  color: #87CEEB;
+  font-family: 'Press Start 2P', cursive;
+  white-space: nowrap;
+}
+
+.proof-filter-dropdown {
+  background: #2C3E50;
+  color: #fff;
+  border: 2px solid #87CEEB;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 11px;
+  font-family: 'Press Start 2P', cursive;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.proof-filter-dropdown:hover {
+  background: #34495E;
+  border-color: #5DADE2;
+}
+
+.proof-filter-dropdown:focus {
+  outline: none;
+  box-shadow: 0 0 10px rgba(135, 206, 235, 0.5);
+}
+
+/* Proof History Container */
+.proof-history-container {
+  max-height: 500px;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+.proof-history-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.proof-history-container::-webkit-scrollbar-track {
+  background: #2C3E50;
+  border-radius: 4px;
+}
+
+.proof-history-container::-webkit-scrollbar-thumb {
+  background: #87CEEB;
+  border-radius: 4px;
+}
+
+.proof-history-container::-webkit-scrollbar-thumb:hover {
+  background: #5DADE2;
+}
+
+/* Proof Entry Card */
+.proof-entry {
+  background: linear-gradient(135deg, #2C3E50 0%, #34495E 100%);
+  border: 3px solid #87CEEB;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.proof-entry:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+  border-color: #5DADE2;
+}
+
+/* Status-specific border colors */
+.proof-entry.status-accepted {
+  border-color: #2ECC71;
+}
+
+.proof-entry.status-rejected {
+  border-color: #E74C3C;
+}
+
+.proof-entry.status-pending {
+  border-color: #F39C12;
+}
+
+/* Proof Header */
+.proof-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(135, 206, 235, 0.3);
+}
+
+.proof-number {
+  font-size: 14px;
+  font-weight: bold;
+  color: #87CEEB;
+  font-family: 'Press Start 2P', cursive;
+}
+
+.proof-badges {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.proof-mode {
+  font-size: 10px;
+  font-weight: bold;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-family: 'Press Start 2P', cursive;
+}
+
+.proof-mode.mode-practice {
+  background: rgba(93, 173, 226, 0.2);
+  color: #5DADE2;
+  border: 2px solid #5DADE2;
+}
+
+.proof-mode.mode-tournament {
+  background: rgba(241, 196, 15, 0.2);
+  color: #F1C40F;
+  border: 2px solid #F1C40F;
+}
+
+.proof-status {
+  font-size: 11px;
+  font-weight: bold;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-family: 'Press Start 2P', cursive;
+  text-transform: uppercase;
+}
+
+.proof-status.status-accepted {
+  background: rgba(46, 204, 113, 0.2);
+  color: #2ECC71;
+  border: 2px solid #2ECC71;
+}
+
+.proof-status.status-rejected {
+  background: rgba(231, 76, 60, 0.2);
+  color: #E74C3C;
+  border: 2px solid #E74C3C;
+}
+
+.proof-status.status-pending {
+  background: rgba(243, 156, 18, 0.2);
+  color: #F39C12;
+  border: 2px solid #F39C12;
+}
+
+/* Proof Details */
+.proof-details {
+  display: grid;
+  gap: 8px;
+}
+
+.proof-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(135, 206, 235, 0.1);
+}
+
+.proof-row:last-child {
+  border-bottom: none;
+}
+
+.proof-label {
+  font-size: 11px;
+  color: #87CEEB;
+  font-family: 'Press Start 2P', cursive;
+}
+
+.proof-value {
+  font-size: 11px;
+  color: #fff;
+  font-family: 'Press Start 2P', cursive;
+  font-weight: bold;
+}
+
+.proof-value.error {
+  color: #E74C3C;
+}
+
+.rejection-reason {
+  background: rgba(231, 76, 60, 0.1);
+  padding: 8px;
+  border-radius: 6px;
+  margin-top: 8px;
+}
+
+.rejection-reason .proof-value {
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+/* Proof Footer */
+.proof-footer {
+  margin-top: 12px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(135, 206, 235, 0.3);
+}
+
+.session-id {
+  font-size: 9px;
+  color: #7F8C8D;
+  font-family: 'Courier New', monospace;
+  word-break: break-all;
+}
+
+/* Empty and Error States */
+.empty-message,
+.error-message,
+.loading-message {
+  text-align: center;
+  padding: 40px 20px;
+  color: #87CEEB;
+  font-family: 'Press Start 2P', cursive;
+}
+
+.empty-message p,
+.error-message p,
+.loading-message {
+  margin: 10px 0;
+  font-size: 12px;
+}
+
+.empty-message .hint {
+  font-size: 10px;
+  color: #7F8C8D;
+  font-family: Arial, sans-serif;
+  margin-top: 15px;
+}
+
+.error-message {
+  color: #E74C3C;
+}
+
+.error-details {
+  font-size: 10px;
+  color: #BDC3C7;
+  font-family: 'Courier New', monospace;
+  margin-top: 10px;
+  padding: 10px;
+  background: rgba(231, 76, 60, 0.1);
+  border-radius: 6px;
+}
+
+.retry-btn {
+  margin-top: 15px;
+  padding: 10px 20px;
+  background: #87CEEB;
+  color: #2C3E50;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.retry-btn:hover {
+  background: #5DADE2;
+  transform: scale(1.05);
+}
+
+.retry-btn:active {
+  transform: scale(0.95);
+}
+
+/* Loading animation */
+.loading-message {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .proofs-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+  }
+
+  .proofs-header h3 {
+    font-size: 14px;
+    text-align: center;
+  }
+
+  .proofs-filters {
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .proofs-filter-group {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    width: 100%;
+    min-width: unset;
+  }
+
+  .proofs-filter-group label {
+    font-size: 10px;
+    text-align: left;
+  }
+
+  .proof-filter-dropdown {
+    width: 100%;
+    font-size: 10px;
+    padding: 10px;
+  }
+
+  .proof-history-container {
+    max-height: 400px;
+  }
+
+  .proof-entry {
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+
+  .proof-header {
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
+  }
+
+  .proof-number {
+    font-size: 10px;
+    text-align: center;
+  }
+
+  .proof-badges {
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+  }
+
+  .proof-mode {
+    font-size: 9px;
+    padding: 6px 8px;
+    text-align: center;
+  }
+
+  .proof-status {
+    font-size: 9px;
+    padding: 6px 8px;
+    text-align: center;
+  }
+
+  .proof-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .proof-label,
+  .proof-value {
+    font-size: 10px;
+  }
+
+  .proof-footer {
+    margin-top: 8px;
+  }
+
+  .session-id {
+    font-size: 8px;
+    word-break: break-all;
+  }
+
+  .loading-message,
+  .empty-message,
+  .error-message {
+    font-size: 11px;
+    padding: 20px;
+  }
+
+  .retry-btn {
+    font-size: 10px;
+    padding: 8px 16px;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+  .proofs-header h3 {
+    font-size: 12px;
+  }
+
+  .proof-filter-dropdown {
+    font-size: 9px;
+    padding: 8px;
+  }
+
+  .proof-entry {
+    padding: 10px;
+  }
+
+  .proof-label,
+  .proof-value {
+    font-size: 9px;
+  }
+}
