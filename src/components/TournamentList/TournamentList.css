@@ -86,7 +86,7 @@
 }
 
 .tournament-card.pinned {
-  border-left: 4px solid #FFD700;
+  border-left: 4px solid #4caf50;
   background: linear-gradient(135deg,
     rgba(255, 215, 0, 0.1) 0%,
     rgba(255, 215, 0, 0.05) 100%);
@@ -273,7 +273,7 @@
 }
 
 .tournament-action-btn.join-btn {
-  background: var(--color-success);
+  background: #4caf50;
   color: var(--color-text-white);
   box-shadow:
     0 4px 0 #2E7D32,
@@ -291,7 +291,7 @@
 }
 
 .tournament-action-btn.view-btn {
-  background: var(--color-info);
+  background: #3498db;
   color: var(--color-text-white);
   box-shadow:
     0 4px 0 #2980b9,

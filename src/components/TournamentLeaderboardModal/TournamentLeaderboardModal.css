@@ -8,6 +8,7 @@
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.85);
+  background-image: url("/assets/background-base.png");
   display: flex;
   align-items: center;
   justify-content: center;
@@ -56,7 +57,7 @@
   left: -4px;
   width: 8px;
   height: 8px;
-  background: var(--color-brand-primary);
+  background: #ff6b35;
   box-shadow:
     calc(100% + 0px) 0 0 var(--color-brand-primary),
     0 calc(100% + 0px) 0 var(--color-brand-primary),
@@ -75,7 +76,7 @@
 .tournament-leaderboard-header h2 {
   font-family: var(--font-family-primary);
   font-size: var(--font-size-lg);
-  color: var(--color-brand-primary);
+  color: #ff6b35;
   text-shadow: 2px 2px 0 var(--color-bg-darkest);
   margin: 0;
 }
@@ -135,11 +136,11 @@
 }
 
 .meta-value.status-active {
-  color: var(--color-status-active);
+  color: #4caf50;
 }
 
 .meta-value.status-ending-soon {
-  color: var(--color-brand-primary);
+  color: #ff6b35;
 }
 
 .meta-value.status-ended {
@@ -150,9 +151,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: var(--spacing-lg) 25px;
-  border-bottom: 2px solid var(--color-bg-darker);
-  background: rgba(44, 62, 80, 0.3);
+  padding: 15px 25px;
+  border-bottom: 2px solid #34495E;
+  background: #2c3e504d;
 }
 
 .leaderboard-actions {
@@ -162,21 +163,18 @@
 
 .join-tournament-btn,
 .refresh-leaderboard-btn {
-  padding: var(--spacing-sm) var(--spacing-lg);
+  /* padding: 8px 15px; */
   border: none;
-  font-family: var(--font-family-primary);
+  font-family: "Press Start 2P", cursive;
   font-size: 8px;
   cursor: pointer;
-  text-shadow: 1px 1px 0 rgba(0,0,0,0.5);
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, .5);
 }
 
 .join-tournament-btn {
-  background: var(--color-success);
-  color: var(--color-text-white);
-  box-shadow:
-    0 3px 0 #2E7D32,
-    0 6px 0 #1B5E20,
-    0 6px 8px rgba(0,0,0,0.3);
+  background: #4caf50;
+  color: #fff;
+  box-shadow: 0 3px #2e7d32, 0 6px #1b5e20, 0 6px 8px #0000004d;
 }
 
 .join-tournament-btn:hover {
@@ -189,12 +187,9 @@
 }
 
 .refresh-leaderboard-btn {
-  background: var(--color-info);
-  color: var(--color-text-white);
-  box-shadow:
-    0 3px 0 #2980b9,
-    0 6px 0 #1f5582,
-    0 6px 8px rgba(0,0,0,0.3);
+  background: #3498db;
+  color: #fff;
+  box-shadow: 0 3px #2980b9, 0 6px #1f5582, 0 6px 8px #0000004d;
 }
 
 .refresh-leaderboard-btn:hover {
@@ -216,14 +211,14 @@
 .leaderboard-header {
   display: grid;
   grid-template-columns: 50px 1fr 100px;
-  gap: var(--spacing-md);
-  padding: var(--spacing-lg) 25px;
-  background: rgba(222, 42, 2, 0.1);
-  border-bottom: 2px solid var(--color-brand-primary);
-  font-family: var(--font-family-primary);
+  gap: 10px;
+  padding: 15px 25px;
+  background: #ff6b351a;
+  border-bottom: 2px solid #FF6B35;
+  font-family: "Press Start 2P", cursive;
   font-size: 9px;
-  color: var(--color-brand-primary);
-  text-shadow: 1px 1px 0 var(--color-bg-darkest);
+  color: #ff6b35;
+  text-shadow: 1px 1px 0 #1a252f;
 }
 
 .header-rank {
@@ -309,7 +304,7 @@
 
 .entry-score {
   text-align: center;
-  color: var(--color-success);
+  color: #4caf50;
   font-family: var(--font-family-primary);
   text-shadow: 1px 1px 0 var(--color-bg-darkest);
 }
@@ -438,9 +433,12 @@
   }
 
   .tournament-leaderboard-controls {
-    flex-direction: column;
-    gap: var(--spacing-lg);
-    padding: var(--spacing-lg) var(--spacing-xl);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px 25px;
+    border-bottom: 2px solid #34495E;
+    background: #2c3e504d;
   }
 
   .leaderboard-header {

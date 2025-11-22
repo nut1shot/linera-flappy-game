@@ -7,7 +7,7 @@
 /* Mobile-friendly touch targets */
 .mobile-touch-target {
   min-width: 44px !important;
-  min-height: 44px !important;
+  min-height: 26px !important;
   padding: 8px !important;
 }
 
