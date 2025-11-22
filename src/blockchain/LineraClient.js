@@ -34,21 +34,52 @@ export class LineraClient {
     this.isInitialized = false;
 
     // Validate required environment variables
-    if (!this.APP_ID) {
-      throw new Error("VITE_APP_ID is not configured in .env file");
-    }
-    if (!this.APP_URL) {
-      throw new Error("VITE_APP_URL is not configured in .env file");
-    }
-    if (!this.LEADERBOARD_CHAIN_ID) {
-      throw new Error(
-        "VITE_LEADERBOARD_CHAIN_ID is not configured in .env file"
-      );
-    }
-    if (!this.LEADERBOARD_CHAIN_BASE_URL) {
-      throw new Error(
-        "VITE_LEADERBOARD_CHAIN_URL is not configured in .env file"
-      );
+    const missingVars = [];
+    if (!this.APP_ID) missingVars.push('VITE_APP_ID');
+    if (!this.APP_URL) missingVars.push('VITE_APP_URL');
+    if (!this.LEADERBOARD_CHAIN_ID) missingVars.push('VITE_LEADERBOARD_CHAIN_ID');
+    if (!this.LEADERBOARD_CHAIN_BASE_URL) missingVars.push('VITE_LEADERBOARD_CHAIN_URL');
+
+    if (missingVars.length > 0) {
+      const isVercel = typeof window !== 'undefined' && window.location.hostname.includes('vercel.app');
+      const errorMessage = `
+❌ Missing Environment Variables: ${missingVars.join(', ')}
+
+${isVercel ? `
+📦 VERCEL DEPLOYMENT:
+You need to add these environment variables in your Vercel dashboard:
+
+1. Go to: https://vercel.com/your-project/settings/environment-variables
+2. Add each variable:
+   - VITE_APP_ID
+   - VITE_APP_URL
+   - VITE_LEADERBOARD_CHAIN_ID
+   - VITE_LEADERBOARD_CHAIN_URL
+
+3. Redeploy your application
+
+Example values (use your own):
+VITE_APP_ID=bec134b49591a78d210f84f4655867514292aef930cb0429558295ea820b9743
+VITE_APP_URL=https://faucet.testnet-conway.linera.net
+VITE_LEADERBOARD_CHAIN_ID=13936f9a66d74c2c10fcecd40c0b461480904e38916a22e7c9e1723c1d7dfd37
+VITE_LEADERBOARD_CHAIN_URL=https://157-245-157-36.nip.io
+` : `
+💻 LOCAL DEVELOPMENT:
+1. Copy .env.example to .env
+2. Fill in your blockchain credentials
+3. Restart the development server
+
+Example:
+cp .env.example .env
+# Edit .env with your values
+pnpm dev
+`}
+
+📚 Documentation:
+See README.md for detailed setup instructions
+      `.trim();
+
+      throw new Error(errorMessage);
     }
 
     // Construct full leaderboard chain URL

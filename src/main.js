@@ -840,11 +840,21 @@ Please check:
       // Show success message briefly
       await new Promise((resolve) => setTimeout(resolve, 800));
     } catch (error) {
-      console.error("Failed to setup blockchain game:", error);
-      spinner.updateMessage(
-        "Setup failed - continuing with limited functionality"
-      );
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // Check if error is "Game already configured" - this is OK
+      const errorMessage = error.message || error.toString();
+      if (errorMessage.includes("Game already configured") ||
+          errorMessage.includes("Leaderboard chain is already set")) {
+        // Already configured - silently succeed
+        console.log("Game already configured - continuing...");
+        this.gameState.setGameConfigured(true);
+        spinner.updateMessage("Game ready!");
+        await new Promise((resolve) => setTimeout(resolve, 500));
+      } else {
+        // Real error - log but don't show to user
+        console.error("Failed to setup blockchain game:", error);
+        spinner.updateMessage("Continuing with existing configuration...");
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+      }
       // Don't throw error - allow user to continue with limited functionality
     } finally {
       // Hide loading spinner

@@ -320,3 +320,34 @@ body.is-admin .admin-only {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+/* ===== CUSTOM SCROLLBARS ===== */
+/* Component-specific scrollbar styles */
+
+.leaderboard-list::-webkit-scrollbar,
+.tournament-list-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.leaderboard-list::-webkit-scrollbar-track,
+.tournament-list-container::-webkit-scrollbar-track {
+  background: var(--color-bg-darkest);
+  border: 1px solid var(--color-bg-darker);
+}
+
+.leaderboard-list::-webkit-scrollbar-thumb,
+.tournament-list-container::-webkit-scrollbar-thumb {
+  background: var(--color-sky-light);
+  border: 1px solid var(--color-bg-darkest);
+}
+
+.leaderboard-list::-webkit-scrollbar-thumb:hover,
+.tournament-list-container::-webkit-scrollbar-thumb:hover {
+  background: #98D8E8;
+}
+
+/* Admin badge utility */
+.admin-badge {
+  color: #FFD700;
+  margin-left: var(--spacing-sm);
+}

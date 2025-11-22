@@ -1,0 +1,275 @@
+/* Button Base Styles */
+/* Import variables for consistency */
+@import './variables.css';
+
+/* Base Button Styles */
+.button-base {
+  padding: var(--spacing-md) var(--spacing-xl);
+  border: none;
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-base);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
+}
+
+.button-base:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Primary Button */
+.primary-button {
+  background: linear-gradient(135deg, var(--color-sky-light) 0%, var(--color-sky-dark) 100%);
+  color: var(--color-bg-dark);
+  border: none;
+  padding: 14px 24px;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  font-weight: bold;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.primary-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(135, 206, 235, 0.3);
+}
+
+.primary-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+/* Secondary Button */
+.secondary-button {
+  background: transparent;
+  color: var(--color-sky-light);
+  border: 2px solid var(--color-sky-light);
+  padding: var(--spacing-md) var(--spacing-xl);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.secondary-button:hover:not(:disabled) {
+  background: rgba(135, 206, 235, 0.1);
+  transform: translateY(-1px);
+}
+
+/* Tournament Action Buttons */
+.tournament-action-btn {
+  padding: 10px 15px;
+  border: none;
+  font-family: var(--font-family-primary);
+  font-size: 9px;
+  cursor: pointer;
+  position: relative;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
+  min-width: 120px;
+  transition: none;
+}
+
+.tournament-action-btn.join-btn {
+  background: #4CAF50;
+  color: #FFF;
+  box-shadow: 
+    0 4px 0 #2E7D32, 
+    0 8px 0 #1B5E20, 
+    0 8px 12px rgba(0, 0, 0, 0.3);
+}
+
+.tournament-action-btn.join-btn:hover {
+  background: #5CBF60;
+  transform: translateY(-2px);
+  box-shadow: 
+    0 6px 0 #2E7D32, 
+    0 10px 0 #1B5E20, 
+    0 10px 16px rgba(0, 0, 0, 0.3);
+}
+
+.tournament-action-btn.view-btn {
+  background: #3498db;
+  color: #FFF;
+  box-shadow: 
+    0 4px 0 #2980b9, 
+    0 8px 0 #1f5582, 
+    0 8px 12px rgba(0, 0, 0, 0.3);
+}
+
+.tournament-action-btn.view-btn:hover {
+  background: #4fb3d9;
+  transform: translateY(-2px);
+  box-shadow: 
+    0 6px 0 #2980b9, 
+    0 10px 0 #1f5582, 
+    0 10px 16px rgba(0, 0, 0, 0.3);
+}
+
+.tournament-action-btn:active {
+  transform: translateY(4px);
+}
+
+.tournament-action-btn.join-btn:active {
+  box-shadow: 
+    0 2px 0 #2E7D32, 
+    0 4px 0 #1B5E20, 
+    0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.tournament-action-btn.view-btn:active {
+  box-shadow: 
+    0 2px 0 #2980b9, 
+    0 4px 0 #1f5582, 
+    0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Create Tournament Button */
+.create-tournament-btn {
+  padding: 12px 20px;
+  background: #FFD700;
+  color: #2C3E50;
+  border: none;
+  font-family: var(--font-family-primary);
+  font-size: 10px;
+  cursor: pointer;
+  box-shadow: 
+    0 4px 0 #B8860B, 
+    0 8px 0 #8B6914, 
+    0 8px 12px rgba(0, 0, 0, 0.3);
+  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.create-tournament-btn:hover {
+  background: #FFE55C;
+  transform: translateY(-2px);
+  box-shadow: 
+    0 6px 0 #B8860B, 
+    0 10px 0 #8B6914, 
+    0 10px 16px rgba(0, 0, 0, 0.3);
+}
+
+/* Back Button */
+.back-button {
+  padding: 12px 20px;
+  background: var(--color-sky-light);
+  color: var(--color-bg-dark);
+  border: none;
+  font-family: var(--font-family-primary);
+  font-size: 10px;
+  cursor: pointer;
+  box-shadow: 
+    0 4px 0 #4682B4, 
+    0 8px 0 #2F4F4F, 
+    0 8px 12px rgba(0, 0, 0, 0.3);
+  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.back-button:hover {
+  background: #B0E0E6;
+  transform: translateY(-2px);
+  box-shadow: 
+    0 6px 0 #4682B4, 
+    0 10px 0 #2F4F4F, 
+    0 10px 16px rgba(0, 0, 0, 0.3);
+}
+
+/* Loading Button */
+.loading-button {
+  position: relative;
+  pointer-events: none;
+}
+
+.loading-button.loading {
+  opacity: 0.7;
+}
+
+.loading-button.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  margin: -8px 0 0 -8px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+/* Generic button loading state */
+button.loading {
+  opacity: 0.7;
+  cursor: not-allowed;
+  position: relative;
+}
+
+button.loading::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  margin: auto;
+  border: 2px solid transparent;
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@keyframes spin {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+input:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .tournament-action-btn {
+    width: 100%;
+    max-width: 200px;
+  }
+
+  .create-tournament-btn,
+  .back-button {
+    width: 100%;
+    max-width: 200px;
+    font-size: 9px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .primary-button:hover,
+  .secondary-button:hover,
+  .tournament-action-btn:hover,
+  .create-tournament-btn:hover,
+  .back-button:hover {
+    transform: none;
+  }
+
+  .loading-button.loading::after {
+    animation: none;
+  }
+}
+
