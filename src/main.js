@@ -646,12 +646,33 @@ Please check:
       // Generate session ID on frontend (to match what we'll send to blockchain)
       const sessionId = `session_${Date.now()}_${user.username}`;
 
-      // Start session on blockchain with our generated session ID
-      const response = await this.lineraClient.startGameSession(
-        sessionId,
-        user.username,
-        tournamentId
-      );
+      // Retry logic for starting session
+      let retries = 3;
+      let success = false;
+      let lastError = null;
+
+      while (retries > 0 && !success) {
+        try {
+          // Start session on blockchain with our generated session ID
+          await this.lineraClient.startGameSession(
+            sessionId,
+            user.username,
+            tournamentId
+          );
+          success = true;
+        } catch (error) {
+          console.warn(`Session start attempt failed (${retries} retries left):`, error);
+          lastError = error;
+          retries--;
+          if (retries > 0) {
+            await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1s before retry
+          }
+        }
+      }
+
+      if (!success) {
+        throw lastError || new Error("Failed to start session after retries");
+      }
 
       // Store session ID for later use
       this.currentGameSession = {
@@ -669,6 +690,9 @@ Please check:
       console.error("Failed to start game session:", error);
       // Continue playing even if session start fails (graceful degradation)
       this.currentGameSession = null;
+
+      // Notify user that score won't be verified
+      alert("Warning: Could not start verified game session. Your score will NOT be saved to the leaderboard. Please check your connection and try again.");
     } finally {
       // Hide loading spinner
       if (spinner) {
@@ -720,13 +744,34 @@ Please check:
         'score-submission'
       );
 
-      // Submit to blockchain with proof
-      await this.lineraClient.submitVerifiedScore(
-        this.currentGameSession.sessionId,
-        user.username,
-        this.currentGameSession.tournamentId,
-        proof
-      );
+      // Retry logic for submitting score
+      let retries = 3;
+      let success = false;
+      let lastError = null;
+
+      while (retries > 0 && !success) {
+        try {
+          // Submit to blockchain with proof
+          await this.lineraClient.submitVerifiedScore(
+            this.currentGameSession.sessionId,
+            user.username,
+            this.currentGameSession.tournamentId,
+            proof
+          );
+          success = true;
+        } catch (error) {
+          console.warn(`Score submission attempt failed (${retries} retries left):`, error);
+          lastError = error;
+          retries--;
+          if (retries > 0) {
+            await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1s before retry
+          }
+        }
+      }
+
+      if (!success) {
+        throw lastError || new Error("Failed to submit score after retries");
+      }
 
       console.log("Verified score submitted successfully");
 
